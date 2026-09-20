@@ -11,10 +11,6 @@ public interface ClazzMapper {
     @Select("select * from class")
     List<Clazz> selectAll();
 
-    /** 统计总记录数：给 Service 算总页数用 */
-    @Select("select count(*) from class")
-    Integer selectCount();
-
     @Select("select * from class limit #{pageStart}, #{pageSize}")
     List<Clazz> selectByPage(@Param("pageStart") Integer pageStart,
                              @Param("pageSize") Integer pageSize);

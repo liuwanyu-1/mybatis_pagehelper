@@ -18,8 +18,8 @@ public class TestClazzService {
     }
 
     @Test
-    public void testFindClazzesByPage() {
-        List<Clazz> clazzes = clazzService.findClazzesByPage(1, 2);
+    public void testSelectByPage() {
+        List<Clazz> clazzes = clazzService.selectByPage(1, 2);
         for (Clazz clazz : clazzes) {
             System.out.println(clazz);
         }

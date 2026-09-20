@@ -1,62 +1,57 @@
+<%@ page import="lwy.study.mybatis.pojo.Clazz" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%-- JSTL 3.0（Tomcat 10 / Jakarta EE）的 core 标签库 URI 是 jakarta.tags.core --%>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!DOCTYPE html>
 <html>
 <head>
-    <title>班级分页查询</title>
+    <title>班级分页</title>
     <style>
-        table { border-collapse: collapse; margin: 16px 0; }
-        th, td { border: 1px solid #333; padding: 6px 16px; }
-        .disabled { color: #aaa; pointer-events: none; }
-        a { margin: 0 8px; }
+        table { border-collapse: collapse; width: 600px; }
+        td, th { border: 1px solid #999; padding: 6px; text-align: center; }
     </style>
 </head>
 <body>
-<h3>班级分页查询</h3>
-<%-- 循环遍历后端 request 域里的集合渲染表格 --%>
+
+<%
+    List<Clazz> clazzes = (List<Clazz>) request.getAttribute("clazzes");
+    Integer pageNum = (Integer) request.getAttribute("pageNum");
+    Integer pageSize = (Integer) request.getAttribute("pageSize");
+    if (pageNum == null) {
+        pageNum = 1;
+    }
+    if (pageSize == null) {
+        pageSize = 5;
+    }
+%>
+
 <table>
     <tr>
-        <th>序号</th>
         <th>班级编号</th>
-        <th>班级名称</th>
-        <th>班主任编号</th>
+        <th>班级号</th>
+        <th>班级名</th>
+        <th>班主任id</th>
     </tr>
-    <c:forEach items="${clazzes}" var="clazz" varStatus="st">
-        <tr>
-            <td>${st.index + 1}</td>
-            <td>${clazz.cno}</td>
-            <td>${clazz.cname}</td>
-            <td>${clazz.tid}</td>
-        </tr>
-    </c:forEach>
+    <%
+        if (clazzes != null) {
+            for (Clazz clazz : clazzes) {
+    %>
+    <tr>
+        <td><%= clazz.getCid() %></td>
+        <td><%= clazz.getCno() %></td>
+        <td><%= clazz.getCname() %></td>
+        <td><%= clazz.getTid() %></td>
+    </tr>
+    <%
+            }
+        }
+    %>
 </table>
 
-<p>
-    共 ${totalRecord} 条记录，共 ${totalPage} 页，
-    当前第 ${pageNum} 页，每页 ${pageSize} 条
-</p>
+<br/>
 
-<%-- 超链接必须用 pageContext.request.contextPath 拼上下文路径，否则路径错误 --%>
-<%-- 第一页置灰上一页，最后一页置灰下一页（边界判断） --%>
-<p>
-    <c:choose>
-        <c:when test="${pageNum <= 1}">
-            <a class="disabled">上一页</a>
-        </c:when>
-        <c:otherwise>
-            <a href="${pageContext.request.contextPath}/queryClazzes?pageNumber=${pageNum - 1}&pageSize=${pageSize}">上一页</a>
-        </c:otherwise>
-    </c:choose>
+<%-- 翻页链接要用 request.getContextPath() 拼上项目路径，不然会 404 --%>
+<a href="<%= request.getContextPath() %>/queryClazzes?pageNum=<%= pageNum - 1 %>&pageSize=<%= pageSize %>">上一页</a>
 
-    <c:choose>
-        <c:when test="${pageNum >= totalPage}">
-            <a class="disabled">下一页</a>
-        </c:when>
-        <c:otherwise>
-            <a href="${pageContext.request.contextPath}/queryClazzes?pageNumber=${pageNum + 1}&pageSize=${pageSize}">下一页</a>
-        </c:otherwise>
-    </c:choose>
-</p>
+<a href="<%= request.getContextPath() %>/queryClazzes?pageNum=<%= pageNum + 1 %>&pageSize=<%= pageSize %>">下一页</a>
+
 </body>
 </html>

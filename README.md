@@ -175,8 +175,8 @@ phpStudy 面板看绿灯，或 `netstat -ano | findstr 3306`。
 http://localhost:8080/mybatis_pagehelper/queryClazzes
 ```
 
-5. **应该看到**：班级表格、`共 10 条记录，共 5 页，当前第 1 页，每页 2 条`、上一页是灰的、下一页能点
-6. 可选 URL 参数：`?pageNumber=3&pageSize=4` = 第 3 页每页 4 条；传个 `pageNumber=999` 会自动修正到最后一页（reasonable 分页合理化在起作用）
+5. **应该看到**：班级表格和下面的"上一页 / 下一页"链接（默认第 1 页，每页 5 条）
+6. 可选 URL 参数：`?pageNum=3&pageSize=2` = 第 3 页每页 2 条
 
 > 访问根路径 `http://localhost:8080/mybatis_pagehelper/` 会自动跳到上面这个页面（index.jsp 里写了跳转）。
 
@@ -190,11 +190,11 @@ http://localhost:8080/mybatis_pagehelper/queryClazzes
 
 | 文件 | 作用 |
 |---|---|
-| `dao/ClazzMapper` | `selectAll()` 查全部、`selectByPage()` 手写 limit、`selectCount()` 统计总条数 |
+| `dao/ClazzMapper` | `selectAll()` 查全部、`selectByPage()` 手写 limit 分页 |
 | `service/IClazzService` + `impl/ClazzServiceImpl` | `PageHelper.startPage(pageNum,pageSize)` 写在查询**上一行**，再调 `selectAll()`，插件自动改 SQL 拼 limit |
-| `servlet/QueryClazzesByPage` | 收 pageNumber/pageSize（空则默认 1 和 2）→ 调 Service → 算总页数 `(total+pageSize-1)/pageSize` → 存 **request 域** → **请求转发** JSP |
-| `webapp/clazzList.jsp` | JSTL `c:forEach` 渲染表格、`${pageContext.request.contextPath}` 拼翻页链接、首页/末页按钮置灰 |
-| `mybatis-config.xml` | `<plugins>` 里配 PageInterceptor + `reasonable=true` |
+| `servlet/QueryClazzesByPage` | 收 pageNum/pageSize（空则默认 1 和 5）→ 调 Service → 存 **request 域** → **请求转发** JSP |
+| `webapp/clazzList.jsp` | 脚本片段 `<% %>` 渲染表格、`request.getContextPath()` 拼翻页链接 |
+| `mybatis-config.xml` | `<plugins>` 里配 PageInterceptor |
 
 **手写 limit vs PageHelper（一句话）**：手写要自己算 `pageStart=(pageNumber-1)*pageSize` 再写进 SQL；PageHelper 底层还是 limit，只是用拦截器帮你自动算自动拼。考试考手写原理，工作用插件。
 
@@ -213,7 +213,7 @@ http://localhost:8080/mybatis_pagehelper/queryClazzes
 | 7 | **Table 'design.class' doesn't exist** | 没建表或表名大小写不对 | 表名就是小写 `class` |
 | 8 | **ClassNotFoundException: jakarta.servlet...** | 用了 Tomcat 9/8 | 换 Tomcat 10，或看第 8 节变体篇 |
 | 9 | 页面把 **${clazzes} 原样显示** | web.xml 太老（2.3 DTD 不求值 EL） | 换成 `web-app_6_0.xsd` 头（本项目已换好） |
-| 10 | JSP 报 **The absolute uri [jakarta.tags.core] cannot be resolved** | Tomcat 10 没自带 JSTL | pom 里的 jstl 两个依赖别删（jakarta 版 3.0.x）；Tomcat 9 则要换成旧 uri `http://java.sun.com/jsp/jstl/core` + 旧 jstl 包 |
+| 10 | 想用 JSTL 的 c:forEach 报 **The absolute uri cannot be resolved** | Tomcat 10 不自带 JSTL | pom 加 `jakarta.servlet.jsp.jstl-api:3.0.0` + `org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1`，taglib uri 写 `jakarta.tags.core`（本项目用脚本片段，不需要 JSTL） |
 | 11 | 控制台/页面**中文乱码** | 编码不一致 | IDEA 帮助→编辑自定义 VM 选项加 `-Dfile.encoding=UTF-8`；运行配置 VM options 同样加 |
 | 12 | 启动报 **must match "(properties?,settings?,typeAliases?…** | mybatis-config 里 `<plugins>` 插的位置不对 | plugins 必须在 `</typeAliases>` 之后、`<environments>` 之前（DTD 顺序） |
 | 13 | Maven 下载依赖极慢/超时 | 没配国内镜像 | 第 1.5 节阿里云镜像 |
@@ -260,8 +260,8 @@ Tomcat 9 及以下用 `javax.servlet`，本项目用 `jakarta.servlet`，**不�
 
 - [ ] MySQL 能启动、库里 class 表有数据
 - [ ] IDEA 里 Tomcat 配好，启动无红字
-- [ ] `/queryClazzes` 页面出表格，上一页/下一页能翻，首页末页按钮会置灰
-- [ ] `?pageNumber=999` 自动修正到最后一页（reasonable）
+- [ ] `/queryClazzes` 页面出表格，上一页/下一页能翻
+- [ ] `?pageNum=2&pageSize=2` 翻页参数正常生效
 - [ ] 能口头说清：pageStart 公式、总页数公式、request 和 session 的区别、转发和重定向的区别、PageHelper 底层还是 limit
 - [ ] 截图里有自己的数据，别直接用别人的运行结果
 

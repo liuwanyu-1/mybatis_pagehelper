@@ -49,17 +49,6 @@
       <artifactId>log4j</artifactId>
       <version>1.2.17</version>
     </dependency>
-    <!-- JSTL 标签库：JSP 里用 c:forEach 渲染表格；Tomcat 10 不自带必须引入 -->
-    <dependency>
-      <groupId>jakarta.servlet.jsp.jstl</groupId>
-      <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-      <version>3.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.web</groupId>
-      <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-      <version>3.0.1</version>
-    </dependency>
     <!-- PageHelper 分页插件：拦截 SQL 自动拼 limit，并提供 PageInfo 分页信息 -->
     <dependency>
       <groupId>com.github.pagehelper</groupId>

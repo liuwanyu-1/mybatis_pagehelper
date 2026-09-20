@@ -17,10 +17,7 @@
     </typeAliases>
 
     <plugins>
-        <plugin interceptor="com.github.pagehelper.PageInterceptor">
-            <!-- 分页合理化：页码<1 查第一页，页码>总页数 查最后一页，避免无效页码 -->
-            <property name="reasonable" value="true"/>
-        </plugin>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
     </plugins>
 
     <environments default="development">
