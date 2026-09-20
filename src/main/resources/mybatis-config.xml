@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 配置日志实现为 LOG4J，控制台可看到 MyBatis 执行的 SQL -->
+    <settings>
+        <setting name="logImpl" value="LOG4J"/>
+    </settings>
+
+    <!-- 类型别名：XML 里 resultType 可以直接写小写别名 -->
+    <typeAliases>
+        <!--    <typeAlias type="lwy.study.mybatis.pojo.Teacher" alias="teacher"/>-->
+        <!--    <typeAlias type="lwy.study.mybatis.pojo.Clazz" alias="clazz"/>-->
+        <!--    pojo 包里所有的类别名都是首字母小写的类名-->
+        <package name="lwy.study.mybatis.pojo"/>
+    </typeAliases>
+
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!-- 分页合理化：页码<1 查第一页，页码>总页数 查最后一页，避免无效页码 -->
+            <property name="reasonable" value="true"/>
+        </plugin>
+    </plugins>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver"
+                          value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url"
+              value="jdbc:mysql://localhost:3306/design?serverTimezone=Asia/Shanghai"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123456"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!--        <mapper resource="lwy/study/mybatis/mapper/ClazzMapper.xml"/>-->
+        <!--    <mapper resource="lwy/study/mybatis/dao/TeacherDao.xml"/>-->
+        <!--    <mapper class="此处需要写全路径！"/>-->
+        <!--    <mapper resource="lwy/study/mybatis/dao/ClazzMapper.xml"/>-->
+        <!--    <mapper class="lwy.study.mybatis.dao.ClazzMapper"/>-->
+        <package name="lwy.study.mybatis.dao"/>
+    </mappers>
+</configuration>
