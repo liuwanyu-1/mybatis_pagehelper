@@ -32,4 +32,11 @@ public class ClazzServiceImpl implements IClazzService {
         List<Clazz> clazzes = clazzMapper.selectAll();
         return clazzes;
     }
+
+    /** 手写 limit 版：pageStart=(pageNum-1)*pageSize，公式必须在 Service 层算 */
+    @Override
+    public List<Clazz> selectByPageManual(int pageNum, int pageSize) {
+        Integer pageStart = (pageNum - 1) * pageSize;
+        return clazzMapper.selectByPage(pageStart, pageSize);
+    }
 }

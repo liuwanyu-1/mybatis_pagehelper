@@ -191,7 +191,7 @@ http://localhost:8080/mybatis_pagehelper/queryClazzes
 | 文件 | 作用 |
 |---|---|
 | `dao/ClazzMapper` | `selectAll()` 查全部、`selectByPage()` 手写 limit 分页 |
-| `service/IClazzService` + `impl/ClazzServiceImpl` | `PageHelper.startPage(pageNum,pageSize)` 写在查询**上一行**，再调 `selectAll()`，插件自动改 SQL 拼 limit |
+| `service/IClazzService` + `impl/ClazzServiceImpl` | 插件版 `selectByPage`（startPage 后查全部，插件自动拼 limit）+ 手写版 `selectByPageManual`（Service 层算 pageStart 再调 DAO） |
 | `servlet/QueryClazzesByPage` | 收 pageNum/pageSize（空则默认 1 和 5）→ 调 Service → 存 **request 域** → **请求转发** JSP |
 | `webapp/clazzList.jsp` | 脚本片段 `<% %>` 渲染表格、`request.getContextPath()` 拼翻页链接 |
 | `mybatis-config.xml` | `<plugins>` 里配 PageInterceptor |

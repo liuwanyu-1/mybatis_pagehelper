@@ -24,4 +24,13 @@ public class TestClazzService {
             System.out.println(clazz);
         }
     }
+
+    /** 手写 limit 版：按页码查询，公式在 Service 层算 */
+    @Test
+    public void testSelectByPageManual() {
+        List<Clazz> clazzes = clazzService.selectByPageManual(1, 2);
+        for (Clazz clazz : clazzes) {
+            System.out.println(clazz);
+        }
+    }
 }
